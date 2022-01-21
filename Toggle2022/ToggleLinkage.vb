@@ -37,9 +37,6 @@ Public Class ToggleLinkage
     Private Sub UpdateDesign()
         Dim c As Point = New Point(B1.X, B1.Y + DistanceBetween(D, B2) / 2)
 
-        'Dim BC As Double = DistanceBetween(B1, c)
-        'Dim CD As Double = DistanceBetween(c, D)
-
         m_BC = DistanceBetween(B1, c)
         m_CD = DistanceBetween(c, D)
 
@@ -62,7 +59,9 @@ Public Class ToggleLinkage
         m_ResultItems = New List(Of ListViewItem)
 
         For i As Integer = 0 To PivotShaftRotation Step 5
+
             Dim alfa As Double = Atan2B1 + i
+
             Dim pivot As Double = Math.Cos(Radians(i)) * BladeForce * Math.Abs(B1.X) / 1000
 
             Dim seal As Double
@@ -77,7 +76,9 @@ Public Class ToggleLinkage
                 AB1 * Math.Sin(Radians(alfa)))
 
             Dim a1 As Double = Common.AngleOppositeToSideC(Common.DistanceBetween(B, D), BC, CD)
+
             Dim a2 As Double = Common.AngleOppositeToSideC(Common.DistanceBetween(B, D), AB1, AD)
+
             Dim a3 As Double = a1 + a2
 
             Dim l1 As Double = Math.Sin(Radians(a3)) * AB1
@@ -102,6 +103,8 @@ Public Class ToggleLinkage
                                                l2.ToString(sFormat),
                                                drive.ToString(sFormat)}))
         Next
+
+
     End Sub
 
 #Region "Categories.PivotShaft"

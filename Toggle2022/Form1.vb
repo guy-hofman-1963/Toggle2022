@@ -7,6 +7,8 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         link = New ToggleLinkage
         Me.PropertyGrid1.SelectedObject = link
+        Me.ListView1.Items.Clear()
+        Me.ListView1.Items.AddRange(link.ResultItems.ToArray)
     End Sub
 
     Private Sub link_PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Handles link.PropertyChanged
