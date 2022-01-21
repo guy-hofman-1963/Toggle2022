@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1738
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Toggle2022", "Toggle2022\Toggle2022.vbproj", "{3E3C2C97-BB31-4CA3-995B-73A169B8F584}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E3C2C97-BB31-4CA3-995B-73A169B8F584}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E3C2C97-BB31-4CA3-995B-73A169B8F584}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E3C2C97-BB31-4CA3-995B-73A169B8F584}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E3C2C97-BB31-4CA3-995B-73A169B8F584}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D37FEAE9-EDC2-4C4F-8FD7-281431F0766E}
+	EndGlobalSection
+EndGlobal
