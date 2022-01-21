@@ -65,8 +65,10 @@ Public Class ToggleLinkage
             Dim pivot As Double = Math.Cos(Radians(i)) * BladeForce * Math.Abs(B1.X) / 1000
 
             Dim seal As Double
-            If (i = 0) Or (i = PivotShaftRotation) Then
+            If (i = 0) Then
                 seal = SealForce * Math.Abs(B1.X) / 1000
+            ElseIf (i = PivotShaftRotation) Then
+                seal = -SealForce * Math.Abs(B1.X) / 1000
             Else
                 seal = 0
             End If
@@ -88,9 +90,9 @@ Public Class ToggleLinkage
             Dim l2 As Double = Math.Sin(Radians(a1)) * Common.DistanceBetween(B, D)
 
             Dim drive As Double = rod * l2 / 1000
-            If (i = PivotShaftRotation) Then
-                drive = -drive
-            End If
+            'If (i = PivotShaftRotation) Then
+            '    drive = -drive
+            'End If
 
             Dim sFormat As String = "F1"
 
@@ -409,4 +411,20 @@ Public Class ToggleLinkage
         End Get
     End Property
 
+
+    Public Sub Up()
+        D = New Point(D.X, D.Y + 50)
+    End Sub
+
+    Public Sub Down()
+        D = New Point(D.X, D.Y - 50)
+    End Sub
+
+    Public Sub Left()
+        D = New Point(D.X - 50, D.Y)
+    End Sub
+
+    Public Sub Right()
+        D = New Point(D.X + 50, D.Y)
+    End Sub
 End Class
