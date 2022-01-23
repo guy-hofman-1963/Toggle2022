@@ -19,15 +19,16 @@ Public Class ToggleLinkage
     Private Class Categories
         Public Const PivotShaft As String = "01 -- Pivot shaft"
         Public Const BladePin As String = "02 -- Blade pin"
-        Public Const DriveShaft As String = "03 -- Drive shaft"
-        Public Const Settings As String = "04 -- Settings"
-        Public Const Loads As String = "05 -- Loads"
-        Public Const Size As String = "06 -- Size"
-        Public Const ConnectingRod As String = "07 -- Connecting rod"
-        Public Const DriveLever As String = "08 -- Drive lever"
-        Public Const Angles As String = "09 -- Angles"
-        Public Const Distances As String = "10 -- Distances"
-        Public Const Result As String = "11 -- Result Loads"
+        Public Const LeverPin As String = "03 -- Lever pin"
+        Public Const DriveShaft As String = "04 -- Drive shaft"
+        Public Const Settings As String = "05 -- Settings"
+        Public Const Loads As String = "06 -- Loads"
+        Public Const Size As String = "07 -- Size"
+        Public Const ConnectingRod As String = "08 -- Connecting rod"
+        Public Const DriveLever As String = "09 -- Drive lever"
+        Public Const Angles As String = "10 -- Angles"
+        Public Const Distances As String = "11 -- Distances"
+        Public Const Result As String = "12 -- Result Loads"
     End Class
 
     Public Sub New()
@@ -111,10 +112,10 @@ Public Class ToggleLinkage
 
 #Region "Categories.PivotShaft"
 
-    <Category(Categories.PivotShaft)>
+    <Category(Categories.PivotShaft), Description("Pivot shaft coordinates.")>
     Public ReadOnly Property A As Point = New Point(0, 0)
 
-    <Category(Categories.PivotShaft)>
+    <Category(Categories.PivotShaft), Description("Pivot shaft rotation.")>
     Public ReadOnly Property PivotShaftRotation As Integer = 90
 
 #End Region
@@ -122,7 +123,7 @@ Public Class ToggleLinkage
 #Region "Categories.BladePin"
 
     Private m_B1 As Drawing.Point = New Point(-3450, 450)
-    <Category(Categories.BladePin)>
+    <Category(Categories.BladePin), Description("Blade pin coordinates in bypass closed position.")>
     Public Property B1 As Point
         Get
             Return m_B1
@@ -133,7 +134,7 @@ Public Class ToggleLinkage
         End Set
     End Property
 
-    <Category(Categories.BladePin)>
+    <Category(Categories.BladePin), Description("Blade pin coordinates in boiler closed position.")>
     Public ReadOnly Property B2 As Point
         Get
             Return New Point(
@@ -144,22 +145,54 @@ Public Class ToggleLinkage
 
 #End Region
 
+#Region "LeverPin"
+    <Category(Categories.LeverPin), Description("Drive lever pin coordinates in bypass closed position.")>
+    Public ReadOnly Property C1 As PointF
+        Get
+            Dim a1 As Double = AngleOppositeToSideC(B1.X - D.X, DistanceBetween(B1, D), B1.Y - D.Y)
+            Dim a2 As Double = AngleOppositeToSideC(BC, DistanceBetween(B1, D), CD)
+            Dim a3 As Double = a1 + a2
+
+            Return New PointF(
+                B1.X + Math.Cos(Radians(a3)) * BC,
+                B1.Y + Math.Sin(Radians(a3)) * BC)
+
+        End Get
+    End Property
+
+    <Category(Categories.LeverPin), Description("Drive lever pin coordinates in boiler closed position.")>
+    Public ReadOnly Property C2 As PointF
+        Get
+            Dim a1 As Double = AngleOppositeToSideC(B2.Y - D.Y, DistanceBetween(B2, D), B2.X - D.X)
+            Dim a2 As Double = AngleOppositeToSideC(BC, DistanceBetween(B2, D), CD)
+            Dim a3 As Double = a1 + a2
+
+            Return New PointF(
+                B2.X - Math.Sin(Radians(a3)) * BC,
+                B2.Y + Math.Cos(Radians(a3)) * BC)
+
+        End Get
+    End Property
+#End Region
+
 #Region "Categories.DriveShaft"
 
     Private m_D As Drawing.Point = New Point(-2650, 900)
 
-    <Category(Categories.DriveShaft)>
+    <Category(Categories.DriveShaft), Description("Drive shaft coordinates.")>
     Public Property D As Point
         Get
             Return m_D
         End Get
         Set(value As Point)
-            m_D = New Point(-Math.Abs(value.X), +Math.Abs(value.Y))
-            NotifyPropertyChanged("D")
+            If (Math.Abs(value.X) < Math.Abs(B1.X)) And (Math.Abs(value.Y) > Math.Abs(B1.Y)) Then
+                m_D = New Point(-Math.Abs(value.X), +Math.Abs(value.Y))
+                NotifyPropertyChanged("D")
+            End If
         End Set
     End Property
 
-    <Category(Categories.DriveShaft)>
+    <Category(Categories.DriveShaft), Description("Drive shaft rotation.")>
     Public ReadOnly Property DriveShaftRotation As Double
         Get
             Return Common.AngleOppositeToSideC(B1D, CD, BC) +
@@ -174,7 +207,8 @@ Public Class ToggleLinkage
 #Region "Categories.Settings"
 
     Private m_BetaMin As Double = 17.5
-    <Category(Categories.Settings)>
+    <Category(Categories.Settings),
+        Description("Minimum value for angle beta. Beta is the angle, at point 'D', in triangle 'B2C2D', boiler closed position.")>
     Public Property BetaMin As Double
         Get
             Return m_BetaMin
@@ -186,7 +220,7 @@ Public Class ToggleLinkage
     End Property
 
     Private m_RoundOff As Boolean = True
-    <Category(Categories.Settings)>
+    <Category(Categories.Settings), Description("If true, BC (connecting rod length) and CD (drive lever length) return rounded values.")>
     Public Property RoundOff As Boolean
         Get
             Return m_RoundOff
@@ -403,6 +437,7 @@ Public Class ToggleLinkage
     End Property
 #End Region
 
+
     Private m_ResultItems As List(Of ListViewItem)
     '<Browsable(False)>
     Public ReadOnly Property ResultItems As List(Of ListViewItem)
@@ -411,20 +446,19 @@ Public Class ToggleLinkage
         End Get
     End Property
 
-
     Public Sub Up()
-        D = New Point(D.X, D.Y + 50)
+        D = New Point(D.X, D.Y + 100)
     End Sub
 
     Public Sub Down()
-        D = New Point(D.X, D.Y - 50)
+        D = New Point(D.X, D.Y - 100)
     End Sub
 
     Public Sub Left()
-        D = New Point(D.X - 50, D.Y)
+        D = New Point(D.X - 100, D.Y)
     End Sub
 
     Public Sub Right()
-        D = New Point(D.X + 50, D.Y)
+        D = New Point(D.X + 100, D.Y)
     End Sub
 End Class
